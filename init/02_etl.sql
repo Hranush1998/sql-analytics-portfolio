@@ -28,3 +28,4 @@ FROM '/docker-entrypoint-initdb.d/data/sales.csv'
 WITH (FORMAT csv, HEADER true);
 
 
+
