@@ -45,8 +45,24 @@
 4. env общие сведения об учетной записи.
 5. gitignore игнорирование определенных данных.
 6. docker-compose.yaml установить связь между Docker Desktop и Visual Studio Code.
+
+## Ознакомление с платформой *pgAdmin*
    
-   
+   http://localhost:5050/login?next=/browser/
+
+   - введение первого запроса.
+   - data output.
+
+И на конец, чтобы не загружать компьютер сервера можно отключать и включать. 
+
+```docker compose up -d```
+```docker compose down```
+
+
+
+
+
+
 
 
 
