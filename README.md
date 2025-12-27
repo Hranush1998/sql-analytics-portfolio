@@ -215,6 +215,173 @@ CREATE TABLE sales (
 
 
 
+## Анализ данных ЧАСТЬ I
+
+ORDER BY
+
+EXPLAIN
+SELECT *
+FROM sales;
+
+EXPLAIN
+SELECT *
+FROM products;
+
+EXPLAIN 
+SELECT product_name, price
+FROM products;
+
+SELECT product_name,
+		category
+FROM 	products
+ORDER BY product_name ASC;
+
+SELECT
+  product_name,
+  price
+FROM products
+ORDER BY price DESC;
+
+SELECT
+  product_name,
+  category,
+  price
+FROM products
+ORDER BY category ASC, price DESC;
+
+-- LIMIT
+
+SELECT
+  product_name,
+  price
+FROM products
+ORDER BY price DESC
+LIMIT 10;
+
+
+-- GROUP BY
+
+SELECT
+  product_id,
+  SUM(total_sales) AS total_revenue
+FROM sales
+GROUP BY product_id;
+
+-- MIX
+
+SELECT
+  product_id,
+  SUM(total_sales) AS total_revenue
+FROM sales
+GROUP BY product_id
+ORDER BY total_revenue DESC
+LIMIT 5;
+
+
+SELECT 
+  category
+FROM products;
+
+SELECT 
+  category
+  COUNT (*)
+FROM products
+GROUP BY category;
+
+SELECT
+  product_id,
+  COUNT(transaction_id) AS number_of_transactions
+FROM sales
+GROUP BY product_id;
+
+
+SELECT
+  product_id,
+  SUM(total_sales) AS total_revenue
+FROM sales
+GROUP BY product_id;
+
+
+SELECT
+  category,
+  AVG(price) AS average_price
+FROM products
+GROUP BY category;
+
+
+SELECT
+  product_id,
+  COUNT(transaction_id) AS transaction_count
+FROM sales
+GROUP BY product_id,
+ORDer BY COUNT(transaction_id) DESC;
+
+-- DISTINCT
+
+SELECT DISTINCT category
+FROM products;
+
+SELECT DISTINCT
+  category,
+  price
+FROM products;
+
+
+-- DISTINCT с COUNT
+
+SELECT DISTINCT
+  COUNT(category)
+  COUNT(DISTINCT category),
+FROM products;
+
+
+SELECT DISTINCT
+  category,
+  price
+FROM products;
+
+SELECT
+  category,
+  price
+FROM products
+GROUP BY category, price;
+
+--HAVING
+--Он работает с агрегированными значениями, а не с необработанными строками.
+
+SELECT
+  product_id,
+  SUM(total_sales) AS total_revenue
+FROM sales
+GROUP BY product_id
+HAVING SUM(total_sales) > 10000;
+
+
+-- where + having
+
+SELECT
+  product_id,
+  SUM(total_sales) AS total_revenue
+FROM sales
+WHERE total_sales > 0
+GROUP BY product_id
+HAVING SUM(total_sales) > 10000;
+
+SELECT product_id,
+COUNT (transaction_id) AS транзакция
+FROM sales
+GROUP BY product_id
+HAVING COUNT(transaction_id) >= 50;
+	
+SELECT
+  product_id,
+  COUNT(transaction_id) AS transaction_count,
+  SUM(total_sales) AS total_revenue
+FROM sales
+GROUP BY product_id
+HAVING
+  COUNT(transaction_id) >= 50
+  AND SUM(total_sales) > 10000;
 
 
 
