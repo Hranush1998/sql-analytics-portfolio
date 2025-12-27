@@ -59,7 +59,147 @@
 ```docker compose down```
 
 
-**Session 03: Data Analysis with SQL | Part I**
+# Session 03: Data Analysis with SQL | Part I
+
+DDL: Data Definition Language
+CRUD: Data Manipulation in Practice
+
+--DDL
+--запрос по клиентам
+SELECT *
+FROM customers
+
+--запрос определенной таблицы
+SELECT customer_name
+FROM customers;
+
+--запрос с использованием where
+SELECT customer_name
+FROM customers
+WHERE customer_id = 7;
+
+--найти клиента в городе с кодом 15562
+SELECT city
+FROM customers
+WHERE zip_code = '15562';
+
+--продукты
+SELECT *
+FROM products;
+
+--Ошибка
+--Single-Column Index (DDL) (использовать индекс для сортировки category)
+CREATE INDEX idx_category_product_id
+ON category (product_id);
+
+--заказы
+SELECT *
+FROM orders;
+
+--Ошибка
+--Single-Column Index (DDL)
+CREATE INDEX idx_month_orders
+ON month (order_id);
+
+-- Продажи
+SELECT *
+FROM sales;
+
+--уже существует (DDL)
+CREATE INDEX idx_sales_product_id
+ON sales (product_id);
+--где индекс? Его нет, просто быстрее находит запрос.
+
+SELECT *
+FROM sales;
+
+--добавление ограничения (цена не может быть отрицательной) (DDL)
+ALTER TABLE products
+ADD CONSTRAINT chk_products_price
+CHECK (price >= 0);
+
+-- удаляем созданный индекс без возможности вернуть (DDL)
+DROP INDEX idx_sales_product_id;
+
+--удаляю столбец продукты (DDL)
+--ERROR:  cannot drop table products because other objects depend on it
+constraint sales_product_id_fkey on table sales depends on table products
+-- не дает удалить данные привязанны
+
+DROP TABLE products;
+--изменить структуру (DDL)
+--ошибка у нас нет такой таблицы
+
+TRUNCATE TABLE sales_staging;
+--CRUD
+--CREATE (CRUD - INSERT)
+
+-- Создали новую строку в таблице продукты и добавили данные по нему
+INSERT INTO products (product_id, product_name, price, category)
+VALUES (101, 'Wireless Mouse', 24.99, 'Accessories');
+
+-- NULL допускаем, что данные пустые (CRUD)
+INSERT INTO products (product_id, product_name, price)
+VALUES (102, 'USB-C Cable', 9.99);
+
+--хочу увидеть пустую ячейку NULL по category (CRUD)
+SELECT product_name,price,product_id,category
+FROM products
+WHERE product_name = 'USB-C Cable';
+
+--Извлекаю данные для просмотра (чтения данных)
+--READ (SELECT) (CRUD)
+SELECT product_id, product_name
+FROM products;
+
+-- WHERE (CRUD)
+SELECT  *
+FROM sales
+WHERE total_sales < 50;
+UPDATE (CRUD)
+
+--обновляю конкретную строку, где product_id = 12
+--(причем данные уже должны быть загружены, чтобы их менять)
+UPDATE products
+SET price = 49.99
+WHERE product_id = 12;
+
+--DELETE (CRUD)
+
+DELETE FROM sales
+WHERE transaction_id = 1004;
+
+--Все связи уже установлены и определены ключи
+--Constraints
+--UNIQUE Constraint
+--ERROR:  relation "customers" already exists
+
+CREATE TABLE customers ( customer_id INTEGER PRIMARY KEY,
+email TEXT UNIQUE, phone_number TEXT);
+--NOT NULL Constraint
+-- ERROR:  relation "customers" already exists
+CREATE TABLE customers ( customer_id INTEGER PRIMARY KEY,
+  phone_number TEXT NOT NULL, email TEXT);
+--PRIMARY KEY Constraint
+CREATE TABLE products ( product_id INTEGER PRIMARY KEY,
+  product_name TEXT NOT NULL,
+  price NUMERIC(10, 2)
+);
+--FOREIGN KEY Constraint
+CREATE TABLE sales (
+  transaction_id INTEGER PRIMARY KEY,
+  customer_id INTEGER,
+  total_sales NUMERIC(10, 2),
+  FOREIGN KEY (customer_id)
+    REFERENCES customers (customer_id)
+);
+--CHECK Constraint
+CREATE TABLE sales (
+  transaction_id INTEGER PRIMARY KEY,
+  total_sales NUMERIC(10, 2) CHECK (total_sales >= 0)
+);
+
+
 
 
 
