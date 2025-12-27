@@ -384,7 +384,45 @@ HAVING
   AND SUM(total_sales) > 10000;
 
 
+## Упражнение 
++ Задание 1
 
+ALTER TABLE customers
+ADD CONSTRAINT uq_customers_email UNIQUE (email);
+
+ALTER TABLE customers
+ALTER COLUMN phone_number SET NOT NULL;
+
+
+ALTER TABLE products
+ADD CONSTRAINT chk_products_price CHECK (price >= 0);
+
+ALTER TABLE sales
+ADD CONSTRAINT chk_sales_total CHECK (total_sales >= 0);
+
++ Задание 2
+
+ALTER TABLE sales
+ADD COLUMN sales_channel TEXT;
+
+ALTER TABLE sales
+ADD CONSTRAINT chk_sales_channel
+CHECK (sales_channel IN ('online', 'store'));
+
+UPDATE sales
+SET sales_channel = 'online'
+WHERE transaction_id % 2 = 0;
+
++ WHERE transaction_id % 2 = 0 Фильтрует строки, применяя обновление только к тем, у которых остаток от transaction_idделения на 2 равен 0 (т. е., четные идентификаторы).  
+
+SELECT *
+FROM sales
+WHERE transaction_id % 2 = 0
+
++ Задание 3
+
+CREATE INDEX idx_sales_product_id
+ON sales (product_id);
 
 
 
