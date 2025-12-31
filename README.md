@@ -67,9 +67,10 @@ CRUD: Data Manipulation in Practice
 + DDL
 + запрос по клиентам
 
-''' sql 
+```sql 
 SELECT *
-FROM customers ''' 
+FROM customers
+```
 
 + запрос определенной таблицы
 
