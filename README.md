@@ -129,8 +129,10 @@ LIMIT 10;
 
 + Single-Column Index (DDL) 
   
+```sql 
 CREATE INDEX idx_category_product_id
 ON category (product_id);
+```
 
 + где индекс? Его нет, просто быстрее находит запрос.
   
@@ -141,26 +143,38 @@ ON category (product_id);
 
 + добавление ограничения (цена не может быть отрицательной) (DDL)
   
+```sql 
 ALTER TABLE products
 ADD CONSTRAINT chk_products_price
 CHECK (price >= 0);
+```
 
 + удаляем созданный индекс без возможности вернуть (DDL)
   
+```sql 
 DROP INDEX idx_sales_product_id;
+```
 
 + удаляю столбец продукты (DDL)
-+ ERROR:  cannot drop table products because other objects depend on it
-  
-constraint sales_product_id_fkey on table sales depends on table products
 
-+ не дает удалить данные привязанны
-
+```sql 
 DROP TABLE products;
---изменить структуру (DDL)
---ошибка у нас нет такой таблицы
+```
++ ERROR:  cannot drop table products because other objects depend on it
+constraint sales_product_id_fkey on table sales depends on table products 
 
++ SQL state: 2BP01
+Detail: constraint sales_product_id_fkey on table sales depends on table products
+Hint: Use DROP ... CASCADE to drop the dependent objects too.
+
+---------------------
+
++ Удаляет все строки из таблицы, сохраняя при этом её структуру. 
+  
+```sql 
 TRUNCATE TABLE sales_staging;
+```
+
 --CRUD
 --CREATE (CRUD - INSERT)
 
