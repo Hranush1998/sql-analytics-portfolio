@@ -84,21 +84,40 @@ FROM customers
 
 + запрос определенной таблицы
 
-```sql SELECT customer_name
+```sql 
+SELECT customer_name
 FROM customers;
 ```
 
-+ запрос с использованием where
++ Запрос с лимитом
   
+```sql
+SELECT customer_name
+FROM customers
+LIMIT 5;
+```
+
++ запрос с использованием where
+```sql  
 SELECT customer_name
 FROM customers
 WHERE customer_id = 7;
+```
+
+```sql
+SELECT customer_name
+FROM customers
+WHERE customer_id = 7
+LIMIT 5;
+```
 
 + найти клиента в городе с кодом 15562
   
+ ```sql 
 SELECT city
 FROM customers
 WHERE zip_code = '15562';
+```
 
 + продукты
   
