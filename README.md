@@ -121,41 +121,22 @@ WHERE zip_code = '15562';
 
 + продукты
   
+ ```sql   
 SELECT *
-FROM products;
+FROM products
+LIMIT 10;
+```
 
-+ Single-Column Index (DDL) (использовать индекс для сортировки category)
- + ???
++ Single-Column Index (DDL) 
   
 CREATE INDEX idx_category_product_id
 ON category (product_id);
 
-+ заказы
-  
-SELECT *
-FROM orders;
-
-+ Ошибка
-+ Single-Column Index (DDL)
-  
-CREATE INDEX idx_month_orders
-ON month (order_id);
-
-+ Продажи
-  
-SELECT *
-FROM sales;
-
-+ уже существует (DDL)
-  
-CREATE INDEX idx_sales_product_id
-ON sales (product_id);
 + где индекс? Его нет, просто быстрее находит запрос.
+  
 + Важно понимать Эта команда не изменяет данные.
 Она изменяет эффективность доступа базы данных к существующим данным.
 
-SELECT *
-FROM sales;
 
 + добавление ограничения (цена не может быть отрицательной) (DDL)
   
