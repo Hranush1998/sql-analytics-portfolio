@@ -663,25 +663,52 @@ HAVING
   COUNT(transaction_id) >= 50
   AND SUM(total_sales) > 10000;
 ```
+---------------
 
+### ИТОГИ
++ Когда использовать HAVING
+  
+1. фильтрация агрегированных результатов
+2. применение пороговых значений к группам
+3. работая с SUM, COUNT, AVG, MIN, или MAX
+---------------------------------------------------
 
-## Упражнение 
-+ Задание 1
+# Упражнение 
+## Задание 1
 
++ Таблицы customers, products, и sales уже существуют.
++ Ваша задача — не открытие , а улучшение, внедрение и оптимизация.
+
+## Задание 1 | Применение отсутствующих бизнес-правил с помощью команды ALTER TABLE
+
++ Адреса электронной почты сотрудников должны быть уникальными.
+  
+```sql 
 ALTER TABLE customers
 ADD CONSTRAINT uq_customers_email UNIQUE (email);
+```
 
++ Указание номеров телефонов сотрудников должно быть обязательным.
+   
+```sql 
 ALTER TABLE customers
 ALTER COLUMN phone_number SET NOT NULL;
-
-
+```
++ Цены на продукцию должны быть неотрицательными.
+  
+```sql 
 ALTER TABLE products
 ADD CONSTRAINT chk_products_price CHECK (price >= 0);
+```
 
++ Сумма продаж должна быть неотрицательной.
+
+```sql
 ALTER TABLE sales
 ADD CONSTRAINT chk_sales_total CHECK (total_sales >= 0);
+```
 
-+ Задание 2
+## Задание 2 | Добавить новый аналитический атрибут
 
 ALTER TABLE sales
 ADD COLUMN sales_channel TEXT;
