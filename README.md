@@ -246,21 +246,55 @@ WHERE total_sales < 50;
 
 + UPDATE (CRUD)
 
---обновляю конкретную строку, где product_id = 12
---(причем данные уже должны быть загружены, чтобы их менять)
++ обновляю конкретную строку, где product_id = 12
++ (причем данные уже должны быть загружены, чтобы их менять)
++ Важно! Обновления всегда должны быть направлены на конкретные строки 
+
+```sql
 UPDATE products
 SET price = 49.99
 WHERE product_id = 12;
+```
 
---DELETE (CRUD)
+```sql
+UPDATE products
+SET price = 51
+WHERE product_id = 11;
+```
 
++ DELETE (CRUD)
++ Данная DELETEинструкция удаляет записи из таблицы.
+
+```sql
 DELETE FROM sales
 WHERE transaction_id = 1004;
+```
 
---Все связи уже установлены и определены ключи
---Constraints
---UNIQUE Constraint
---ERROR:  relation "customers" already exists
+### Mental Model to Remember
+
+DDL 
++ defines tables, columns, constraints, indexes
+CRUD 
++ inserts, reads, updates, deletes rows
+DML 
++ SQL language (INSERT, SELECT, UPDATE, DELETE) implementing CRUD
+
+========================
+
+### Constraints
++ Ограничения определяют, какие типы данных может принимать таблица или столбец, и обычно устанавливаются при создании таблицы. 
+
++ UNIQUE Constraint
+  
++ Пример: необходимо убедиться, что каждый адрес электронной почты клиента уникален
+
+```sql
+CREATE TABLE customers (
+  customer_id INTEGER PRIMARY KEY,
+  email TEXT UNIQUE,
+  phone_number TEXT
+);
+```
 
 CREATE TABLE customers ( customer_id INTEGER PRIMARY KEY,
 email TEXT UNIQUE, phone_number TEXT);
