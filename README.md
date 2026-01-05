@@ -59,7 +59,7 @@
 ```docker compose down```
 
 
-# Session 03: Data Analysis with SQL | Part I
+# Session 02: Intro to PostgreSQL
 
 
 ### DDL (Data Definition Language, «язык определения данных») — это часть языка SQL, которая используется для определения, изменения и удаления структуры объектов базы данных, таких как таблицы, представления, индексы и схемы, а не сами данные внутри них. Основные команды DDL включают CREATE (создать), ALTER (изменить) и DROP (удалить). 
@@ -272,19 +272,19 @@ WHERE transaction_id = 1004;
 
 ### Mental Model to Remember
 
-DDL 
+### DDL 
 + defines tables, columns, constraints, indexes
-CRUD 
+### CRUD 
 + inserts, reads, updates, deletes rows
-DML 
+### DML 
 + SQL language (INSERT, SELECT, UPDATE, DELETE) implementing CRUD
 
-========================
+--------------------------------------
 
 ### Constraints
 + Ограничения определяют, какие типы данных может принимать таблица или столбец, и обычно устанавливаются при создании таблицы. 
 
-+ UNIQUE Constraint
+### UNIQUE Constraint
   
 + Пример: необходимо убедиться, что каждый адрес электронной почты клиента уникален
 
@@ -296,18 +296,56 @@ CREATE TABLE customers (
 );
 ```
 
-CREATE TABLE customers ( customer_id INTEGER PRIMARY KEY,
-email TEXT UNIQUE, phone_number TEXT);
---NOT NULL Constraint
--- ERROR:  relation "customers" already exists
-CREATE TABLE customers ( customer_id INTEGER PRIMARY KEY,
-  phone_number TEXT NOT NULL, email TEXT);
---PRIMARY KEY Constraint
-CREATE TABLE products ( product_id INTEGER PRIMARY KEY,
+### NOT NULL Constraint
+
++ NOT NULL ограничение гарантирует, что столбец не может содержать пустые (NULL) значения 
+
++ Пример: убедиться, что у каждого клиента есть номер телефона.
+  
+```sql
+CREATE TABLE customers (
+  customer_id INTEGER PRIMARY KEY,
+  phone_number TEXT NOT NULL,
+  email TEXT
+);
+```
+
+### PRIMARY KEY Constraint
+
++ Идентификатор PRIMARY KEYоднозначно определяет каждую строку в таблице.
++ Ограничение PRIMARY KEY автоматически обеспечивает соблюдение как , так UNIQUEи NOT NULL.
+  
++ Пример: определить первичный ключ для таблицы товаров. 
+
+```sql
+CREATE TABLE products (
+  product_id INTEGER PRIMARY KEY,
   product_name TEXT NOT NULL,
   price NUMERIC(10, 2)
 );
---FOREIGN KEY Constraint
+```
+
+### FOREIGN KEY Constraint
+
++ FOREIGN KEY устанавливает связь между двумя таблицами, ссылаясь на первичный ключ другой таблицы.
+
++ Foreign Key (Внешний ключ) — это столбец (или набор столбцов) в одной таблице базы данных, который ссылается на первичный ключ (PRIMARY KEY) другой таблицы, устанавливая между ними связь для обеспечения целостности данных (ссылочной целостности). Он гарантирует, что значения в дочерней таблице (с внешним ключом) соответствуют существующим записям в родительской таблице (с первичным ключом), предотвращая некорректные данные.
+
+#### Ключевые моменты:
+
++ Связующий элемент: Внешний ключ — это "мост" между двумя таблицами, позволяющий извлекать связанные данные.
+
++ Целостность данных: Он не позволяет вставить в дочернюю таблицу запись, ссылающуюся на несуществующий первичный ключ в родительской таблице.
+
++ Пример: В таблице Заказы поле customer_id может быть внешним ключом, ссылающимся на id клиента в таблице Клиенты. Это значит, что каждый заказ должен быть связан с существующим клиентом.
+
++ Синтаксис (SQL): Создается с помощью оператора FOREIGN KEY и REFERENCES.
+  
++ Действия: Можно настроить каскадное удаление (ON DELETE CASCADE) или обновление (ON UPDATE CASCADE), чтобы изменения в родительской таблице автоматически отражались в дочерней.
+
++ Пример: связать записи о продажах с клиентами.
+
+```sql
 CREATE TABLE sales (
   transaction_id INTEGER PRIMARY KEY,
   customer_id INTEGER,
@@ -315,15 +353,22 @@ CREATE TABLE sales (
   FOREIGN KEY (customer_id)
     REFERENCES customers (customer_id)
 );
---CHECK Constraint
+```
+
++ С учетом этого ограничения вы не сможете добавить продажу для клиента, которого нет в customers таблице. 
+
+### CHECK Constraint
+
++ Ограничение CHECK определяет диапазон или условия значений, которые могут быть вставлены в столбец.
+
+```sql
 CREATE TABLE sales (
   transaction_id INTEGER PRIMARY KEY,
   total_sales NUMERIC(10, 2) CHECK (total_sales >= 0)
 );
+```
 
-
-
-## Анализ данных ЧАСТЬ I
+# Сессия 03: Анализ данных с помощью SQL | Часть I
 
 ORDER BY
 
