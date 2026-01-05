@@ -434,7 +434,7 @@ FROM products
 ORDER BY category ASC, price DESC;
 ```
 
-### Подводить итоги:
+### итоги:
 
 1. ORDER BY применяется после SELECT и FROM
 2. По умолчанию сортировка осуществляется по возрастанию.
@@ -525,7 +525,7 @@ FROM sales
 GROUP BY product_id;
 ```
 + Средняя цена по категориям
-+ 
+  
 ```sql
 SELECT
   category,
@@ -544,49 +544,90 @@ GROUP BY product_id,
 ORDer BY COUNT(transaction_id) DESC;
 ```
 
--- DISTINCT
+### DISTINCT
 
++ Это DISTINCT ключевое слово используется для возврата уникальных значений из столбца или комбинации столбцов.
+Оно особенно полезно, когда набор данных содержит повторяющиеся значения, и вы хотите понять, какие уникальные категории или комбинации присутствуют в данных. (Убрать дубликаты).
+
++ Предположим, вы хотите увидеть все уникальные категории товаров в productsтаблице.
+  
+```sql
 SELECT DISTINCT category
 FROM products;
-
+```
++ Например, чтобы найти уникальные комбинации категории товара и цены:
+  
+```sql  
 SELECT DISTINCT
   category,
   price
 FROM products;
+```
 
+### DISTINCT с COUNT
 
--- DISTINCT с COUNT
-
+```sql  
 SELECT DISTINCT
   COUNT(category)
   COUNT(DISTINCT category),
 FROM products;
-
-
+```
++ Во многих случаях DISTINCT & GROUP BY может дать тот же результат, даже если агрегатные функции не используются.
+  
+  ```sql  
 SELECT DISTINCT
   category,
   price
 FROM products;
+```
 
+  ```sql
 SELECT
   category,
   price
 FROM products
 GROUP BY category, price;
+```
++ Как вы думаете, какая команда быстрее: GROUP BYили DISTINCT?
 
---HAVING
---Он работает с агрегированными значениями, а не с необработанными строками.
++ Используйте эту функцию EXPLAINдля генерации планов выполнения обоих запросов и сравнения их предполагаемой стоимости, чтобы определить, какой из них будет работать эффективнее PostgreSQL.
 
+-------------------------------------
+### HAVING
+
++ Он работает с агрегированными значениями, а не с необработанными строками.
+
++ Представьте себе выполнение SQL-запросов как конвейер.
+
+1. Сначала фильтруются исходные строки.
+2. Затем строки группируются.
+3. Совокупные показатели рассчитываются
+4. При необходимости группы фильтруются повторно.
+
++ Это приводит к четкому разделению обязанностей:
+
+1. WHERE  - фильтрация на уровне строк
+2. GROUP BY - группировка данных
+3. HAVING  - фильтрация на уровне группы
+
+ -------------------------------
+
+ + Предположим, вы хотите определить товары, которые принесли более 10 000 долларов общей выручки .
+
+ ```sql
 SELECT
   product_id,
   SUM(total_sales) AS total_revenue
 FROM sales
 GROUP BY product_id
 HAVING SUM(total_sales) > 10000;
+```
 
++ where + having
++ WHERE удаляет ненужные строки на раннем этапе
++ HAVING Применяет бизнес-правила после агрегации
 
--- where + having
-
+ ```sql
 SELECT
   product_id,
   SUM(total_sales) AS total_revenue
@@ -594,13 +635,18 @@ FROM sales
 WHERE total_sales > 0
 GROUP BY product_id
 HAVING SUM(total_sales) > 10000;
-
+```
++ Пример: найти товары, по которым совершено не менее 50 транзакций .
+  
+  ```sql 
 SELECT product_id,
 COUNT (transaction_id) AS транзакция
 FROM sales
 GROUP BY product_id
 HAVING COUNT(transaction_id) >= 50;
-	
+	```
++ Несколько агрегированных условий можно комбинировать с помощью логических операторов.
+   
 SELECT
   product_id,
   COUNT(transaction_id) AS transaction_count,
