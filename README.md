@@ -566,28 +566,32 @@ FROM products;
 
 ### DISTINCT с COUNT
 
++ Показывает количество строк и количество категорий
+  
 ```sql  
 SELECT DISTINCT
   COUNT(category)
   COUNT(DISTINCT category),
 FROM products;
 ```
+
 + Во многих случаях DISTINCT & GROUP BY может дать тот же результат, даже если агрегатные функции не используются.
   
-  ```sql  
+```sql  
 SELECT DISTINCT
   category,
   price
 FROM products;
 ```
 
-  ```sql
+```sql
 SELECT
   category,
   price
 FROM products
 GROUP BY category, price;
 ```
+
 + Как вы думаете, какая команда быстрее: GROUP BYили DISTINCT?
 
 + Используйте эту функцию EXPLAINдля генерации планов выполнения обоих запросов и сравнения их предполагаемой стоимости, чтобы определить, какой из них будет работать эффективнее PostgreSQL.
