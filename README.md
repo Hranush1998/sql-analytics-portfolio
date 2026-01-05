@@ -370,58 +370,116 @@ CREATE TABLE sales (
 
 # Сессия 03: Анализ данных с помощью SQL | Часть I
 
-ORDER BY
++ Первое и самое важное, что нужно понять, это то, что SQL — это декларативный язык программирования .
 
++ Это означает:
++ Вы указываете базе данных, какой результат хотите получить.
++ Вы не указываете, как получить этот результат.
+
++ Что такое план запроса?
++ План запроса показывает, как база данных намерена выполнить SQL-запрос.
+
+```sql
 EXPLAIN
 SELECT *
 FROM sales;
+```
 
++ Писать эффективные запросы к базе данных, чтобы анализировать только нужную часть данных, критически важно для снижения нагрузки на сервер, экономии ресурсов и повышения производительности системы в целом. Вместо полного сканирования таблиц, следует использовать фильтрацию (WHERE), ограничение количества строк (LIMIT), правильные соединения (JOIN), индексы и оптимизированные конструкции. 
+
++ Рассмотри разницу между запросами
+   
+```sql
 EXPLAIN
 SELECT *
 FROM products;
+```
 
+```sql
 EXPLAIN 
 SELECT product_name, price
 FROM products;
+```
+----------------------------------------
 
+### ORDER BY
+
++ Этот ORDER BY пункт сортирует результаты запроса в порядке возрастания или убывания .
+
++ Направление сортировки можно явно задать с помощью следующих параметров:
++ ASC в порядке возрастания
++ DESC в порядке убывания
+  
+```sql
 SELECT product_name,
 		category
 FROM 	products
 ORDER BY product_name ASC;
+```
 
+```sql
 SELECT
   product_name,
   price
 FROM products
 ORDER BY price DESC;
+```
 
+```sql
 SELECT
   product_name,
   category,
   price
 FROM products
 ORDER BY category ASC, price DESC;
+```
 
--- LIMIT
+### Подводить итоги:
 
+1. ORDER BY применяется после SELECT и FROM
+2. По умолчанию сортировка осуществляется по возрастанию.
+3. Используйте DESCдля обратного порядка
+4. Текстовые столбцы отсортированы в алфавитном порядке.
+5. Числовые столбцы сортируются по значению.
+6. Для более точного контроля можно объединить несколько колонок.
+
+------------- 
+
+### LIMIT
+
++ Предположим, вам нужно получить названия товаров и цены, отсортированные по цене от самой высокой до самой низкой, но вас интересуют только 10 самых дорогих товаров
+
+```sql
 SELECT
   product_name,
   price
 FROM products
 ORDER BY price DESC
 LIMIT 10;
+```
+----------------------------
 
+### GROUP BY
 
--- GROUP BY
++ Данный GROUP BY пункт позволяет группировать строки, имеющие одинаковые значения в одном или нескольких столбцах.
++ Она обычно используется вместе с агрегатными функциями для обобщения данных (max, min, sum, avg, count).
 
++ Предположим, вы хотите рассчитать общий объем продаж по каждому товару (LIMIT 10).
+
+```sql
 SELECT
-  product_id,
-  SUM(total_sales) AS total_revenue
+	product_id,
+	SUM (total_sales) AS total_revenue
 FROM sales
-GROUP BY product_id;
+GROUP BY product_id
+LIMIT 10;
+```
 
--- MIX
+----------------------------------
 
+### MIX
+
+```sql
 SELECT
   product_id,
   SUM(total_sales) AS total_revenue
@@ -429,45 +487,62 @@ FROM sales
 GROUP BY product_id
 ORDER BY total_revenue DESC
 LIMIT 5;
+```
+--------------------------
++ Этот запрос возвращает категорию для каждого товара , которая может содержать множество дубликатов. Если вам нужно узнать только, какие категории существуют , GROUP BY то это подходящий инструмент. 
 
-
+```sql
 SELECT 
   category
 FROM products;
-
+```
++ В результате получается краткое резюме различных категорий товаров, хранящихся в базе данных. 
+  
+```sql
 SELECT 
   category
   COUNT (*)
 FROM products
 GROUP BY category;
+```
++ сколько транзакций продаж существует по каждому продукту
+  
 
+```sql
 SELECT
   product_id,
   COUNT(transaction_id) AS number_of_transactions
 FROM sales
 GROUP BY product_id;
-
-
+```
++ Общий доход по каждому продукту
+  
+```sql  
 SELECT
   product_id,
   SUM(total_sales) AS total_revenue
 FROM sales
 GROUP BY product_id;
-
-
+```
++ Средняя цена по категориям
++ 
+```sql
 SELECT
   category,
   AVG(price) AS average_price
 FROM products
 GROUP BY category;
+```
++ сколько транзакций продаж существует для каждой комбинации товара и employee_id (позже мы получим имя сотрудника) 
 
-
+```sql
 SELECT
   product_id,
   COUNT(transaction_id) AS transaction_count
 FROM sales
 GROUP BY product_id,
 ORDer BY COUNT(transaction_id) DESC;
+```
 
 -- DISTINCT
 
