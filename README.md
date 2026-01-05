@@ -183,7 +183,10 @@ TRUNCATE TABLE sales_staging;
 ### CRUD — это аббревиатура от четырех базовых операций при работе с данными: Create (Создание), Read (Чтение), Update (Обновление/Редактирование) и Delete (Удаление). Эти операции являются основой взаимодействия с большинством приложений, баз данных и API, позволяя управлять жизненным циклом записей (добавлять, просматривать, изменять и удалять). 
 
 ### Как CRUD-операции работают:
-+ Create (Создание): Добавление новой записи (например, регистрация пользователя, добавление товара).
+
++ Create (Создание): Добавление новой записи (например, регистрация пользователя, добавление товара). 
+
+INSERT INTO добавить данные по продукту
   
 + Read (Чтение): Получение и просмотр существующих данных (например, профиль пользователя, список товаров).
 
@@ -192,31 +195,56 @@ TRUNCATE TABLE sales_staging;
 + Delete (Удаление): Удаление записи (например, удаление аккаунта, товара). 
 
 + CREATE (CRUD - INSERT)
-
+------------------------
 + Создали новую строку в таблице продукты и добавили данные по нему
 
+```sql 
 INSERT INTO products (product_id, product_name, price, category)
 VALUES (101, 'Wireless Mouse', 24.99, 'Accessories');
+```
++ Создали новую строку в таблице продукты и добавили данные по нему
+  
+```sql 
+INSERT INTO products (product_id,product_name,price,category)
+VALUES (129,'Wireless Mouses',24.99, 'Accessories')
+```
 
--- NULL допускаем, что данные пустые (CRUD)
++ NULL допускаем, что данные пустые (CRUD)
++ Вы можете опустить столбцы, допускающие NULL или имеющие значения по умолчанию.
+  Когда в запросе опускаешь столбец это означает, что значение в нем будет null (NULL по category)
+
+```sql
 INSERT INTO products (product_id, product_name, price)
 VALUES (102, 'USB-C Cable', 9.99);
+```
 
---хочу увидеть пустую ячейку NULL по category (CRUD)
++ хочу увидеть пустую ячейку NULL по category (CRUD)
+
+```sql  
 SELECT product_name,price,product_id,category
 FROM products
 WHERE product_name = 'USB-C Cable';
+```
 
---Извлекаю данные для просмотра (чтения данных)
---READ (SELECT) (CRUD)
++ Извлекаю данные для просмотра (чтения данных)
++ READ = (SELECT) (CRUD)
+
+```sql 
 SELECT product_id, product_name
-FROM products;
+FROM products
+LIMIT 10;
+```
 
--- WHERE (CRUD)
++ WHERE (CRUD)
++ Фильтрация строк осуществляется с помощью WHERE
+
+```sql
 SELECT  *
 FROM sales
 WHERE total_sales < 50;
-UPDATE (CRUD)
+```
+
++ UPDATE (CRUD)
 
 --обновляю конкретную строку, где product_id = 12
 --(причем данные уже должны быть загружены, чтобы их менять)
