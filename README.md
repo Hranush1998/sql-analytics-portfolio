@@ -642,15 +642,17 @@ HAVING SUM(total_sales) > 10000;
 ```
 + Пример: найти товары, по которым совершено не менее 50 транзакций .
   
-  ```sql 
+```sql 
 SELECT product_id,
 COUNT (transaction_id) AS транзакция
 FROM sales
 GROUP BY product_id
 HAVING COUNT(transaction_id) >= 50;
-	```
+```
+
 + Несколько агрегированных условий можно комбинировать с помощью логических операторов.
-   
+
+```sql    
 SELECT
   product_id,
   COUNT(transaction_id) AS transaction_count,
@@ -660,6 +662,7 @@ GROUP BY product_id
 HAVING
   COUNT(transaction_id) >= 50
   AND SUM(total_sales) > 10000;
+```
 
 
 ## Упражнение 
