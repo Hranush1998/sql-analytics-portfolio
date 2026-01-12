@@ -1,6 +1,4 @@
-# sql-analytics-portfolio
-
-# Чему я научилась?
+# ACA 
 
 ## Программы
 
