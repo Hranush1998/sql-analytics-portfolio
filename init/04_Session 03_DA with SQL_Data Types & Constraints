@@ -1,0 +1,119 @@
+SELECT product_name
+FROM products;
+
+
+EXPLAIN
+SELECT *
+FROM sales;
+
+SELECT product_name,
+       price,
+       category
+FROM products;
+
+
+EXPLAIN
+SELECT *
+FROM products;
+
+
+EXPLAIN
+SELECT product_name, price
+FROM products;
+
+SELECT
+  product_name,
+  category
+FROM products
+ORDER BY product_name DESC;
+
+SELECT
+  product_name,
+  price
+FROM products
+ORDER BY price DESC;
+
+
+SELECT
+  product_name,
+  category,
+  price
+FROM products
+ORDER BY category;
+
+SELECT
+  product_name,
+  category,
+  price
+FROM products
+ORDER BY category ASC, price DESC;
+
+SELECT
+  product_name,
+  price
+FROM products
+ORDER BY price DESC
+LIMIT 10;
+
+SELECT
+  product_id,
+  SUM(total_sales) AS total_revenue
+FROM sales
+GROUP BY product_id
+ORDER BY total_revenue ASC;
+
+SELECT
+  product_id,
+  SUM(total_sales) AS total_revenue
+FROM sales
+GROUP BY product_id
+ORDER BY total_revenue DESC
+LIMIT 5;
+
+SELECT
+  category
+FROM products;
+
+SELECT
+  category,
+  COUNT(*)
+FROM products
+GROUP BY category;
+
+
+-- Пример | Продажи по продукту
+
+SELECT
+  product_id,
+  COUNT(transaction_id) AS number_of_transactions
+FROM sales
+GROUP BY product_id;
+
+-- Пример | Общий доход по каждому продукту
+
+SELECT
+  product_id,
+  SUM(total_sales) AS total_revenue
+FROM sales
+GROUP BY product_id;
+
+SELECT
+product_name,
+count (*)
+FROM products
+group by product_name
+order by product_name desc;
+
+SELECT
+  category,
+  COUNT(*)
+FROM products
+GROUP BY category;
+
+-- Пример | Средняя цена по категориям
+
+SELECT
+  category,
+  AVG(price) AS average_price
+FROM products
+GROUP BY category;
