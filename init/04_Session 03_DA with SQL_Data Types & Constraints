@@ -117,3 +117,150 @@ SELECT
   AVG(price) AS average_price
 FROM products
 GROUP BY category;
+
+-- продолжение_ group by
+-- Пример | Группировка по нескольким атрибутам
+
+SELECT
+  product_id,
+  COUNT(transaction_id) AS transaction_count
+FROM sales
+GROUP BY product_id
+ORDER BY COUNT(transaction_id) DESC;
+
+--Distinct
+
+SELECT DISTINCT category
+FROM products;
+
+-- Например, чтобы найти уникальные комбинации категории товара и цены
+
+SELECT DISTINCT
+  category,
+  price
+FROM products;
+
+-- DISTINCT с COUNT
+
+SELECT DISTINCT
+  COUNT(category),
+  COUNT(DISTINCT category)
+FROM products;
+
+-- DISTINCT vs GROUP BY
+
+SELECT DISTINCT
+  category,
+  price
+FROM products;
+
+SELECT
+  category,
+  price
+FROM products
+GROUP BY category, price;
+
+-- Having
+
+-- WHERE
+-- фильтрация на уровне строк
+-- GROUP BY
+-- агрегация
+-- HAVING
+-- фильтрация на уровне группы
+
+-- Логический порядок выполнения запроса
+
+-- Хотя SQL-код пишется сверху вниз, его выполнение происходит в ином логическом порядке.
+--
+-- В общих чертах:
+--
+-- FROM
+-- WHERE
+-- GROUP BY
+-- HAVING
+-- SELECT
+-- ORDER BY
+-- LIMIT
+
+-- Предположим, вы хотите определить товары, которые принесли более 10 000 долларов общей выручки
+
+SELECT
+    product_id,
+    SUM(sales.total_sales) AS total_revenue
+FROM sales
+GROUP BY  product_id
+HAVING SUM(total_sales) > 10000;
+
+-- Их роли дополняют друг друга:
+
+-- WHERE удаляет ненужные строки на раннем этапе
+-- HAVING Применяет бизнес-правила после агрегации
+
+SELECT
+  product_id,
+  SUM(total_sales) AS total_revenue
+FROM sales
+WHERE total_sales > 0
+GROUP BY product_id
+HAVING SUM(total_sales) > 10000;
+
+-- HAVING with COUNT
+--  товары, по которым совершено не менее 50 транзакций
+
+SELECT
+  product_id,
+  COUNT(transaction_id) AS transaction_count
+FROM sales
+GROUP BY product_id
+HAVING COUNT(transaction_id) >= 50;
+
+-- Несколько агрегированных условий можно комбинировать с помощью логических операторов
+
+SELECT
+  product_id,
+  COUNT(transaction_id) AS transaction_count,
+  SUM(total_sales) AS total_revenue
+FROM sales
+GROUP BY product_id
+HAVING
+  COUNT(transaction_id) >= 50
+  AND SUM(total_sales) > 10000;
+
+-- Task 1 | Enforce Missing Business Rules with ALTER TABLE
+
+
+SELECT email, COUNT(*)
+FROM employees
+GROUP BY email
+HAVING COUNT(*) > 1;
+
+SELECT *
+FROM employees
+WHERE email = 'pennybailey@example.org';
+
+DELETE FROM employees
+WHERE employee_id = 100;
+
+ALTER TABLE employees
+ADD CONSTRAINT uq_employees_email UNIQUE (email);
+
+ALTER TABLE products
+ADD CONSTRAINT chk_products_price CHECK (price >= 0);
+
+ALTER TABLE sales
+ADD CONSTRAINT chk_sales_total CHECK (total_sales >= 0);
+
+-- Task 2 | Add a New Analytical Attribute
+
+ALTER TABLE sales
+ADD COLUMN sales_channel TEXT;
+
+ALTER TABLE sales
+ADD CONSTRAINT chk_sales_channel
+CHECK (sales_channel IN ('online', 'store'));
+
+UPDATE sales
+SET sales_channel = 'online'
+WHERE transaction_id % 2 = 0;
+
