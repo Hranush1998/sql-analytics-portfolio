@@ -264,3 +264,94 @@ UPDATE sales
 SET sales_channel = 'online'
 WHERE transaction_id % 2 = 0;
 
+-- Бизнес хочет анализировать продажи по каналам (online или store)
+-- Task 2 | Add a New Analytical Attribute
+
+ALTER TABLE sales
+ADD COLUMN sales_channel TEXT;
+
+ALTER TABLE sales
+ADD CONSTRAINT chk_sales_channel
+CHECK (sales_channel IN ('online', 'store'));
+
+UPDATE sales
+SET sales_channel = 'online'
+WHERE transaction_id % 2 = 0;
+
+-- Explanation:
+-- Added a new column sales_channel to the sales table to track the distribution channel for each transaction.
+-- Created a CHECK constraint (chk_sales_channel) to restrict the column values strictly to 'online' or 'store' to maintain data integrity.
+-- Updated existing records using the modulo operator (transaction_id % 2 = 0) to assign 'online' to even transaction IDs as initial sample data.
+
+UPDATE sales
+SET sales_channel = 'store'
+WHERE transaction_id % 2 <> 0;
+
+SELECT *
+FROM sales;
+
+-- Task 3 | Add Indexes for Query Performance
+
+CREATE INDEX idx_sales_product_id
+ON sales (product_id);
+
+CREATE INDEX idx_sales_customer_id
+ON sales (customer_id);
+
+CREATE INDEX idx_products_category
+ON products (category);
+
+-- Task 4 | Validate Index Usage with EXPLAIN
+
+EXPLAIN
+SELECT
+  product_id,
+  SUM(total_sales) AS total_revenue
+FROM sales
+GROUP BY product_id;
+
+-- Task 5 | Reduce Query Cost by Refining SELECT
+
+SELECT *
+FROM sales;
+
+SELECT
+  transaction_id,
+  product_id,
+  total_sales
+FROM sales;
+
+-- Task 6 | ORDER BY and LIMIT for Business Questions
+
+SELECT
+  product_id,
+  SUM(total_sales) AS total_revenue
+FROM sales
+GROUP BY product_id
+ORDER BY total_revenue DESC
+LIMIT 5;
+
+-- Task 7 | DISTINCT vs GROUP BY (Efficiency Comparison)
+
+EXPLAIN
+SELECT DISTINCT
+  category,
+  price
+FROM products;
+
+EXPLAIN
+SELECT
+  category,
+  price
+FROM products
+GROUP BY category, price;
+
+-- Task 8 | Constraint Enforcement Test
+
+UPDATE products
+SET price = -5
+WHERE product_id = 101;
+
+INSERT INTO customers (customer_id, email, phone_number)
+VALUES (999, 'anna@example.com', '091000999');
+
